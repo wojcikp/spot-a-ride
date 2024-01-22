@@ -9,7 +9,7 @@ class Offer(models.Model):
     user = models.ForeignKey('User', on_delete=models.CASCADE)
     url = models.CharField()
     date_spotted = models.DateTimeField(auto_now_add=True)
-    date_disappeared = models.DateTimeField()
+    date_disappeared = models.DateTimeField(blank=True)
     brand = models.CharField()
     model = models.CharField()
     production_year = models.IntegerField()

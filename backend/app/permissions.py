@@ -7,7 +7,6 @@ from django.db import models
 class UserPermission(permissions.BasePermission):
  
     def has_permission(self, request: Request, view: GenericAPIView):
-         
         if view.action == "create":
             return True
         if view.action == "list":
@@ -18,7 +17,6 @@ class UserPermission(permissions.BasePermission):
             return False
  
     def has_object_permission(self, request: Request, view: GenericAPIView, obj: models.Model):
- 
         if not request.user.is_authenticated:
             return False
  
@@ -28,3 +26,12 @@ class UserPermission(permissions.BasePermission):
             return request.user.is_staff
         else:
             return False
+        
+
+class IsOwnerOrReadOnly(permissions.BasePermission):
+
+    def has_object_permission(self, request, view, obj):
+        if request.method in permissions.SAFE_METHODS:
+            return True
+
+        return obj.user == request.user
