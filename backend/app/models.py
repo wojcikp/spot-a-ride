@@ -7,6 +7,7 @@ class User(AbstractUser):
 
 class SpottedOffer(models.Model):
     user = models.ForeignKey('User', on_delete=models.CASCADE)
+    searched_offer = models.ForeignKey('SearchedOffer', on_delete=models.CASCADE)
     url = models.CharField()
     date_spotted = models.DateTimeField(auto_now_add=True)
     date_disappeared = models.DateTimeField(blank=True)
