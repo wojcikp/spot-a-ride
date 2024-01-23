@@ -4,9 +4,9 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
  
-from .serializers import UserSerializer, OfferSerializer
+from .serializers import UserSerializer, SpottedOfferSerializer
 from .permissions import UserPermission, IsOwnerOrReadOnly
-from .models import User, Offer
+from .models import User, SpottedOffer
  
 class UserViewSet(ModelViewSet):
     permission_classes = (UserPermission,)
@@ -14,10 +14,10 @@ class UserViewSet(ModelViewSet):
     queryset = User.objects.all().order_by('-date_joined')
 
 
-class OfferViewSet(ModelViewSet):
+class SpottedOfferViewSet(ModelViewSet):
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
-    serializer_class = OfferSerializer
-    queryset = Offer.objects.all()
+    serializer_class = SpottedOfferSerializer
+    queryset = SpottedOffer.objects.all()
 
 
 class HelloView(APIView):

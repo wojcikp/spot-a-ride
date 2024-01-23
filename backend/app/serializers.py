@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
  
-from .models import User, Offer
+from .models import User, SpottedOffer
  
 class UserSerializer(ModelSerializer):
      
@@ -16,8 +16,8 @@ class UserSerializer(ModelSerializer):
             return user
     
 
-class OfferSerializer(ModelSerializer):
+class SpottedOfferSerializer(ModelSerializer):
     class Meta:
-        model = Offer
+        model = SpottedOffer
         fields = '__all__'
      

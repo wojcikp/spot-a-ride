@@ -4,12 +4,12 @@ from django.urls import include, path
 from rest_framework import routers
 from rest_framework.authtoken.views import obtain_auth_token
  
-from app.views import UserViewSet, OfferViewSet
+from app.views import UserViewSet, SpottedOfferViewSet
 from app import views
 
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
-router.register(r'offers', OfferViewSet)
+router.register(r'spotted-offers', SpottedOfferViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
