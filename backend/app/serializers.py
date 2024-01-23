@@ -1,6 +1,6 @@
 from rest_framework.serializers import ModelSerializer
  
-from .models import User, SpottedOffer
+from .models import User, SpottedOffer, SearchedOffer
  
 class UserSerializer(ModelSerializer):
      
@@ -19,5 +19,11 @@ class UserSerializer(ModelSerializer):
 class SpottedOfferSerializer(ModelSerializer):
     class Meta:
         model = SpottedOffer
+        fields = '__all__'
+
+
+class SearchedOfferSerializer(ModelSerializer):
+    class Meta:
+        model = SearchedOffer
         fields = '__all__'
      
