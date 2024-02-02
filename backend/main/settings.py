@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'app',
     'rest_framework',
     'rest_framework.authtoken',
+    'django_crontab',
 ]
 
 REST_FRAMEWORK = {
@@ -48,6 +49,10 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     ],
 }
+
+CRONJOBS = [
+    ('*/1 * * * *', 'app.scrappers.my_scheduled_job')
+]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
