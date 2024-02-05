@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework.authtoken',
     'django_crontab',
+    'django_extensions',
 ]
 
 REST_FRAMEWORK = {
@@ -51,7 +53,7 @@ REST_FRAMEWORK = {
 }
 
 CRONJOBS = [
-    ('*/1 * * * *', 'app.scrappers.my_scheduled_job')
+    ('*/1 * * * *', 'app.scrappers.scrapper_scheduled_job', '>> ' + os.path.join(BASE_DIR, 'debug.log' + ' 2>&1 '))
 ]
 
 MIDDLEWARE = [
