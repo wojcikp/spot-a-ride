@@ -27,7 +27,15 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+  'localhost',
+  '127.0.0.1',
+]
+
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:8080',
+    'http://127.0.0.1:8080',
+]
 
 
 # Application definition
@@ -44,6 +52,7 @@ INSTALLED_APPS = [
     'rest_framework.authtoken',
     'django_crontab',
     'django_extensions',
+    'corsheaders',
 ]
 
 REST_FRAMEWORK = {
@@ -53,7 +62,7 @@ REST_FRAMEWORK = {
 }
 
 CRONJOBS = [
-    ('*/1 * * * *', 'app.scrappers.scrapper_scheduled_job', '>> ' + os.path.join(BASE_DIR, 'debug.log' + ' 2>&1 '))
+    ('0 */1 * * *', 'app.scrappers.scrapper_scheduled_job', '>> ' + os.path.join(BASE_DIR, 'debug.log' + ' 2>&1 '))
 ]
 
 MIDDLEWARE = [
@@ -64,6 +73,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'main.urls'

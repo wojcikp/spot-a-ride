@@ -29,3 +29,8 @@ class SearchedOffer(models.Model):
     production_year_to = models.IntegerField(blank=True, null=True)
     mileage_limit = models.IntegerField(blank=True, null=True)
     price_limit = models.IntegerField(blank=True, null=True)
+
+    def save(self, *args, **kwargs):
+        from .scrappers import scrapper_scheduled_job
+        scrapper_scheduled_job()
+        super(SearchedOffer, self).save(*args, **kwargs)

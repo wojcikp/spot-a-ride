@@ -46,7 +46,7 @@ def scrapper_scheduled_job():
                 'price': offer.price,
             } for offer in spotted_offers
         ]
-        new_offers_to_compare = [{k: v for k, v in offer.items() if k not in {'img'}} for offer in new_offers]
+        new_offers_to_compare = [{key: value for key, value in offer.items() if key not in {'img'}} for offer in new_offers]
 
         mark_offers_as_gone(spotted_offers, new_offers_to_compare, spotted_offers_to_compare)
 
