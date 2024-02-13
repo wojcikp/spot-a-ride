@@ -1,13 +1,13 @@
 <template>
   <v-card class="offer">
-    <v-card-title class="justify-center">{{ this.brand }}</v-card-title>
-    <v-card-subtitle class="font-weight-bold">Model: {{ this.model }}</v-card-subtitle>
+    <v-card-title class="otomoto-brand justify-center">{{ this.brand }}</v-card-title>
+    <v-card-subtitle class="otomoto-model font-weight-bold">Model: {{ this.model }}</v-card-subtitle>
     <v-card-text>
       <v-row>
-        <v-col>Rok produkcji od: {{ this.productionYearFrom }}</v-col>
-        <v-col>Rok produkcji do: {{ this.productionYearTo }}</v-col>
-        <v-col>Przebieg do: {{ this.mileageLimit }} km</v-col>
-        <v-col>Cena do: {{ this.priceLimit }} pln</v-col>
+        <v-col class="otmoto-params"><b>Rok produkcji od: </b>{{ this.productionYearFrom }}</v-col>
+        <v-col class="otmoto-params"><b>Rok produkcji do: </b>{{ this.productionYearTo }}</v-col>
+        <v-col class="otmoto-params"><b>Przebieg do: </b>{{ this.mileageLimit }} km</v-col>
+        <v-col class="otmoto-params"><b>Cena do: </b>{{ this.priceLimit }} pln</v-col>
       </v-row>
     </v-card-text>
     <div v-if="this.showSpottedOffers">
@@ -23,12 +23,14 @@
       />
     </div>
     <v-pagination
+      class="mt-6 mb-4"
       v-if="this.showSpottedOffers && this.getSpottedOffersLength > 10"
       v-model="spottedOffersPage"
-      :length="this.getSpottedOffersLength / 10"
-    ></v-pagination>
+      :length="Math.ceil(this.getSpottedOffersLength / 10)"
+      total-visible="10"
+    />
     <v-btn @click="this.toggleSpottedOffersVisibility" block>
-      Znalezione oferty
+      Znalezione oferty ({{ this.getSpottedOffersLength }})
       <v-icon>
         {{ this.getSpottedOffersButtonIcon }}
       </v-icon>
@@ -74,13 +76,14 @@ export default {
         ? filteredOffers.slice(this.spottedOffersPage - 1, this.spottedOffersPage - 1 + offersPerPage)
         : filteredOffers
     },
-
     getSpottedOffersLength () {
       return this.spottedOffers.filter(offer => {
         return offer.searched_offer === this.id
       }).length
     },
-
+    getPagesAmount () {
+      return this.getSpottedOffersLength / 10
+    },
     getSpottedOffersButtonIcon () {
       return this.showSpottedOffers ? 'mdi-menu-up' : 'mdi-menu-down'
     }
@@ -94,11 +97,20 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .offer{
   width: 70%;
   margin-left: auto;
   margin-right: auto;
   margin-top: 50px;
+}
+.otomoto-brand{
+  font-size: 22px;
+}
+.otomoto-model{
+  font-size: 18px;
+}
+.otmoto-params{
+  font-size: 16px;
 }
 </style>
