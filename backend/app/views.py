@@ -24,7 +24,9 @@ class SpottedOfferViewSet(ModelViewSet):
 class SearchedOfferViewSet(ModelViewSet):
     permission_classes = (IsAuthenticated, IsOwnerOrReadOnly)
     serializer_class = SearchedOfferSerializer
-    queryset = SearchedOffer.objects.all()
+
+    def get_queryset(self):
+        return SearchedOffer.objects.filter(user=self.request.user)
 
 
 class UserId(APIView):

@@ -10,7 +10,7 @@ from app import views
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'spotted-offers', SpottedOfferViewSet, basename='SpottedOffer')
-router.register(r'searched-offers', SearchedOfferViewSet)
+router.register(r'searched-offers', SearchedOfferViewSet, basename='SearchedOffer')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
