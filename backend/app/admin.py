@@ -8,7 +8,7 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(SpottedOffer)
 class SpottedOfferAdmin(admin.ModelAdmin):
-    pass
+    readonly_fields = ('date_spotted',)
 
 
 @admin.register(SearchedOffer)
