@@ -65,15 +65,15 @@ export default {
     getOfferAvailableDuration (start, end) {
       const s = new Date(start)
       const e = new Date(end)
-      const diffInSeconds = Math.trunc(Math.abs(e - s) / 1000)
-      const days = Math.trunc(diffInSeconds / 86400)
-      const hours = Math.trunc((diffInSeconds - days * 86400) / 3600)
-      const minutes = (diffInSeconds - days * 86400) - (diffInSeconds - hours * 3600) / 60
-      console.log(diffInSeconds)
-      console.log(days)
-      console.log(hours)
-      console.log(minutes)
-      console.log('-------------------')
+      const diffInMinutes = Math.trunc(Math.abs(e - s) / 1000 / 60)
+
+      const days = Math.trunc(diffInMinutes / 1440)
+      const hoursAndMinutes = diffInMinutes % 1440 / 60
+      const hours = Math.trunc(hoursAndMinutes)
+      const minutes = Math.round(hoursAndMinutes % 1 * 60)
+
+      return days > 0 ? `${days} dni i ${hours}h ${minutes}min` : `${hours}h ${minutes}min`
+    },
     }
   }
 }
