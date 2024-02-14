@@ -73,7 +73,7 @@ export default {
         return offer.searched_offer === this.id
       })
       return filteredOffers.length > 10
-        ? filteredOffers.slice(this.spottedOffersPage - 1, this.spottedOffersPage - 1 + offersPerPage)
+        ? filteredOffers.slice((this.spottedOffersPage - 1) * offersPerPage, this.spottedOffersPage * offersPerPage)
         : filteredOffers
     },
     getSpottedOffersLength () {
