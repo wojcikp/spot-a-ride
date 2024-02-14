@@ -15,15 +15,20 @@
           <v-col class="otomoto-info"><b>Przebieg: </b><br>{{ this.mileage }} km</v-col>
           <v-col class="otomoto-info"><b>Cena: </b><br>{{ this.price }} pln</v-col>
         </v-row>
-        <v-row justify="center" align="end" style="height: 50%">
-          <div v-if="this.dateDisappeared">
-            <v-col class="otomoto-info">
-              <b>Oferta zniknęła: </b><br>
-              {{ getFormattedDate(this.dateDisappeared) }} {{ getFormattedTime(this.dateDisappeared) }}
-            </v-col>
-            <v-col>Była dostępna przez: <br>{{ getOfferAvailableDuration(this.dateSpotted, this.dateDisappeared) }}</v-col>
-          </div>
-          <v-col v-else cols="4"><v-btn @click="openUrlInNewTab">Idź do oferty na otomoto</v-btn></v-col>
+        <v-row v-if="this.dateDisappeared" justify="center" align="end" style="height: 50%">
+          <v-col class="otomoto-info">
+            <b>Oferta zniknęła: </b><br>
+            {{ getFormattedDate(this.dateDisappeared) }} {{ getFormattedTime(this.dateDisappeared) }}
+          </v-col>
+          <v-col class="otomoto-info">
+            Była dostępna przez: <br>{{ getOfferAvailableDuration(this.dateSpotted, this.dateDisappeared) }}
+          </v-col>
+          <v-col>
+            <v-btn @click="removeOffer">Usuń z listy</v-btn>
+          </v-col>
+        </v-row>
+        <v-row v-else justify="center" align="end" style="height: 50%">
+          <v-col cols="4"><v-btn @click="openUrlInNewTab">Idź do oferty na otomoto</v-btn></v-col>
         </v-row>
       </v-col>
     </v-row>
@@ -32,10 +37,12 @@
 </template>
 
 <script>
+import { mapActions } from 'vuex'
 export default {
   name: 'SpottedOffer',
 
   props: {
+    offerId: Number,
     otomotoUrl: String,
     dateSpotted: String,
     dateDisappeared: String,
@@ -47,6 +54,9 @@ export default {
   },
 
   methods: {
+    ...mapActions([
+      'removeSpottedOffer'
+    ]),
     openUrlInNewTab () {
       window.open(this.otomotoUrl, '_blank').focus()
     },
@@ -74,6 +84,8 @@ export default {
 
       return days > 0 ? `${days} dni i ${hours}h ${minutes}min` : `${hours}h ${minutes}min`
     },
+    removeOffer () {
+      this.removeSpottedOffer(this.offerId)
     }
   }
 }

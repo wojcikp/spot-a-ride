@@ -12,6 +12,7 @@
     </v-card-text>
     <div v-if="this.showSpottedOffers">
       <spotted-offer v-for="(offer, index) in this.getSpottedOffersForSearchedParams" :key="index"
+        :offerId="offer.id"
         :otomotoUrl="offer.otomoto_url"
         :dateSpotted="offer.date_spotted"
         :dateDisappeared="offer.date_disappeared"

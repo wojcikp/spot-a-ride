@@ -67,6 +67,9 @@ export default new Vuex.Store({
         .then(data => {
           commit('setUserId', data.userId)
         })
+        .catch(err => {
+          console.error(err)
+        })
     },
 
     getSearchedOffers ({ commit, state }) {
@@ -78,6 +81,9 @@ export default new Vuex.Store({
         .then(response => response.data)
         .then(data => {
           commit('setSearchedOffers', data)
+        })
+        .catch(err => {
+          console.error(err)
         })
     },
 
@@ -107,6 +113,9 @@ export default new Vuex.Store({
         .then(data => {
           commit('setSearchedOffers', data)
         })
+        .catch(err => {
+          console.error(err)
+        })
     },
 
     getSpottedOffers ({ commit, state }) {
@@ -118,6 +127,28 @@ export default new Vuex.Store({
         .then(response => response.data)
         .then(data => {
           commit('setSpottedOffers', data)
+        })
+        .catch(err => {
+          console.error(err)
+        })
+    },
+
+    removeSpottedOffer ({ commit, state }, offerId) {
+      axios.delete(`/api/spotted-offers/${offerId}/`, {
+        headers: {
+          Authorization: `Token ${state.authToken}`
+        }
+      })
+        .then(response => response.data)
+        .then(data => {
+          console.log(data)
+          const offers = state.spottedOffers.filter(offer => {
+            return offer.id !== offerId
+          })
+          commit('setSpottedOffers', offers)
+        })
+        .catch(err => {
+          console.error(err)
         })
     }
   }
