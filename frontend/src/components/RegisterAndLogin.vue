@@ -126,6 +126,8 @@ export default {
         await this.getSearchedOffers()
         await this.getSpottedOffers()
         this.$router.push('/')
+      } else {
+        this.errorMessage = 'Złe dane logowania.'
       }
     },
     register () {
