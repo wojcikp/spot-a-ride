@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import MainView from '../views/MainView.vue'
+import NewSearchForm from '../components/NewSearchForm.vue'
 
 Vue.use(VueRouter)
 
@@ -8,7 +8,12 @@ const routes = [
   {
     path: '/',
     name: 'main',
-    component: MainView
+  {
+    path: '/add-searched-offer',
+    name: 'add-searched-offer',
+    component: NewSearchForm,
+    meta: { requiresAuth: true }
+  },
   }
 ]
 
