@@ -125,7 +125,7 @@ export default {
       if (authToken && userId) {
         await this.getSearchedOffers()
         await this.getSpottedOffers()
-        this.$router.push('/add-searched-offer')
+        this.$router.push('/')
       }
     },
     register () {

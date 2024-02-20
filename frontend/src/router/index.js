@@ -4,6 +4,7 @@ import RegisterAndLogin from '../components/RegisterAndLogin.vue'
 import MainPage from '../components/Main.vue'
 import NewSearchForm from '../components/NewSearchForm.vue'
 import AboutPage from '../components/AboutPage.vue'
+import store from '../store'
 
 const originalPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push (location) {
@@ -43,7 +44,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.meta.requiresAuth) {
-    const token = localStorage.getItem('authToken')
+    const token = store.state.authToken
     if (token) {
       next()
     } else {
