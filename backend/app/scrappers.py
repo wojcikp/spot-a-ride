@@ -5,21 +5,6 @@ from django.utils import timezone
 from .models import SearchedOffer, SpottedOffer
 
 
-MARKI = ('Abarth', 'Acura', 'Aiways', 'Aixam', 'Alfa Romeo', 'Alpine', 'Asia', 'Aston Martin', 'Audi', 'Austin', 'Autobianchi', 
-         'Baic', 'Bentley', 'BMW', 'BMW-ALPINA', 'Brilliance', 'Bugatti', 'Buick', 'BYD', 'Cadillac', 'Casalini', 'Caterham', 
-         'Cenntro', 'Changan', 'Chatenet', 'Chevrolet', 'Chrysler', 'Citroën', 'Cupra', 'Dacia', 'Daewoo', 'Daihatsu', 'DeLorean', 
-         'DFSK', 'DKW', 'Dodge', 'DR MOTOR', 'DS Automobiles', 'FAW', 'Ferrari', 'Fiat', 'Ford', 'Gaz', 'Geely', 'Genesis', 
-         'GMC', 'GWM', 'Honda', 'Hongqi', 'Hummer', 'Hyundai', 'iamelectric', 'Ineos', 'Infiniti', 'Inny', 'Isuzu', 
-         'Iveco', 'Jaguar', 'Jeep', 'Jetour', 'Kia', 'KTM', 'Lada', 'Lamborghini', 'Lancia', 'Land Rover', 'LEVC', 'Lexus', 
-         'Ligier', 'Lincoln', 'Lotus', 'LTI', 'Lucid', 'Lynk & Co', 'MAN', 'Maserati', 'Maxus', 'Maybach', 'Mazda', 'McLaren', 
-         'Mercedes-Benz', 'Mercury', 'MG', 'Microcar', 'MINI', 'Mitsubishi', 'NIO', 'Nissan', 'Nysa', 'Oldsmobile', 'Opel', 'Peugeot', 
-         'Piaggio', 'Plymouth', 'Polestar', 'Polonez', 'Pontiac', 'Porsche', 'RAM', 'Renault', 'Rolls-Royce', 'Rover', 'Saab', 'Seat', 
-         'Seres', 'Shuanghuan', 'Skoda', 'Skywell', 'Smart', 'SsangYong', 'Subaru', 'Suzuki', 'Syrena', 'Tarpan', 'Tata', 'Tesla', 
-         'Toyota', 'Trabant', 'Triumph', 'Uaz', 'Vauxhall', 'VELEX', 'Volkswagen', 'Volvo', 'Warszawa', 'Wartburg', 'Wołga', 'XPeng', 
-         'Zaporożec', 'Zastava', 'ZEEKR', 'Żuk')
-
-
-
 def scrapper_scheduled_job():
     print('SCRAPPER JOB', timezone.now())
 
