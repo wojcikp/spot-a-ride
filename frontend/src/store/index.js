@@ -44,36 +44,36 @@ export default new Vuex.Store({
     },
 
     getAuthToken ({ commit }, { username, password }) {
-      axios.post('/api-token-auth/', {
+      return axios.post('/api-token-auth/', {
         username: username,
         password: password
       })
         .then(response => response.data)
         .then(data => {
-          commit('setAuthToken', data.token)
+          return data.token
         })
         .catch(err => {
           console.error(err)
         })
     },
 
-    getUserId ({ commit, state }) {
-      axios.get('/user-id/', {
+    getUserId ({ commit, state }, authToken) {
+      return axios.get('/user-id/', {
         headers: {
-          Authorization: `Token ${state.authToken}`
+          Authorization: `Token ${authToken}`
         }
       })
         .then(response => response.data)
         .then(data => {
-          commit('setUserId', data.userId)
+          return data.userId
         })
         .catch(err => {
-          console.error(err)
+          return err
         })
     },
 
     getSearchedOffers ({ commit, state }) {
-      axios.get('/api/searched-offers/', {
+      return axios.get('/api/searched-offers/', {
         headers: {
           Authorization: `Token ${state.authToken}`
         }
@@ -96,7 +96,7 @@ export default new Vuex.Store({
         mileageLimit,
         priceLimit
       }) {
-      axios.post('/api/searched-offers/', {
+      return axios.post('/api/searched-offers/', {
         user: state.userId,
         brand: brand,
         model: model,
@@ -119,7 +119,7 @@ export default new Vuex.Store({
     },
 
     getSpottedOffers ({ commit, state }) {
-      axios.get('/api/spotted-offers/', {
+      return axios.get('/api/spotted-offers/', {
         headers: {
           Authorization: `Token ${state.authToken}`
         }

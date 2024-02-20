@@ -1,51 +1,17 @@
 <template>
 <v-app id="spot-a-ride">
+  <upper-bar />
+  <main-menu />
 
-    <v-app-bar
-      app
-      clipped-left
-      flat
-      dark
-      shrink-on-scroll
-      src="../assets/muscle.jpg"
-    >
-    <template v-slot:img="{ props }">
-      <v-img
-        v-bind="props"
-        gradient="to top right, rgba(19,84,122,.5), rgba(128,208,199,.8)"
-      ></v-img>
-    </template>
-      <v-toolbar-title class="toolbar-title">Spot a ride</v-toolbar-title>
-      <v-spacer></v-spacer>
-    </v-app-bar>
-
-    <v-navigation-drawer app clipped>
-      <v-list>
-        <v-list-item
-              v-for="item in this.items"
-              :key="item.title"
-              link
-            >
-              <v-list-item-icon>
-                <v-icon>{{ item.icon }}</v-icon>
-              </v-list-item-icon>
-
-              <v-list-item-content>
-                <v-list-item-title>{{ item.title }}</v-list-item-title>
-              </v-list-item-content>
-            </v-list-item>
-      </v-list>
-    </v-navigation-drawer>
-
-    <searched-offer v-for="(offer, index) in this.searchedOffers" :key="index"
-      :id="offer.id"
-      :brand="offer.brand"
-      :model="offer.model"
-      :mileageLimit="offer.mileage_limit"
-      :priceLimit="offer.price_limit"
-      :productionYearFrom="offer.production_year_from"
-      :productionYearTo="offer.production_year_to"
-    />
+  <searched-offer v-for="(offer, index) in this.searchedOffers" :key="index"
+    :id="offer.id"
+    :brand="offer.brand"
+    :model="offer.model"
+    :mileageLimit="offer.mileage_limit"
+    :priceLimit="offer.price_limit"
+    :productionYearFrom="offer.production_year_from"
+    :productionYearTo="offer.production_year_to"
+  />
 
     <v-btn @click="this.getToken">GET TOKEN</v-btn>
     <v-btn @click="this.setUser">SET USER</v-btn>
@@ -57,25 +23,19 @@
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
+import MainMenu from './MainMenu.vue'
 import SearchedOffer from './SearchedOffer.vue'
-export default {
-  components: { SearchedOffer },
-  name: 'MainPage',
+import UpperBar from './UpperBar.vue'
 
-  data () {
-    return {
-      items: [
-        { title: 'Spotted offers', icon: 'mdi-view-dashboard' },
-        { title: 'Add offer', icon: 'mdi-image' },
-        { title: 'About', icon: 'mdi-help-box' }
-      ],
-      right: null
-    }
-  },
+export default {
+  components: { MainMenu, SearchedOffer, UpperBar },
+  name: 'MainPage',
 
   computed: {
     ...mapGetters([
-      'searchedOffers'
+      'searchedOffers',
+      'authToken',
+      'userId'
     ])
   },
 
@@ -116,6 +76,19 @@ export default {
       })
       // this.getSpottedOffers()
     }
+  },
+
+  mounted: () => {
+    this.$nextTick(() => {
+      if (this.authToken && this.userId) {
+        setInterval(() => {
+          this.getSearchedOffers()
+          this.getSpottedOffers()
+        }, 1000 * 60)
+      } else {
+        this.$router.push('/register-and-login')
+      }
+    })
   }
 }
 </script>
