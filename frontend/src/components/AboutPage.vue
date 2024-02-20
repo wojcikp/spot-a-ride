@@ -12,8 +12,11 @@
         height="200px"
         src="../assets/alfa.jpg"
       >
-        <v-card-title>O aplikacji</v-card-title>
       </v-img>
+
+      <v-card-subtitle class="text-h6">
+        O aplikacji
+      </v-card-subtitle>
 
       <v-card-text class="text--primary">
         <div>
