@@ -5,7 +5,7 @@
         v-for="item in this.items"
         :key="item.title"
         link
-        @click="$router.push(item.path)"
+        @click="item.action"
       >
         <v-list-item-icon>
           <v-icon>{{ item.icon }}</v-icon>
@@ -20,16 +20,30 @@
 </template>
 
 <script>
+import { mapMutations } from 'vuex'
 export default {
   name: 'MainMenu',
 
   data () {
     return {
       items: [
-        { title: 'Spotted offers', icon: 'mdi-view-dashboard', path: '/' },
-        { title: 'Add offer', icon: 'mdi-image', path: '/add-searched-offer' },
-        { title: 'About', icon: 'mdi-help-box', path: '/about' }
+        { title: 'Znalezione oferty', icon: 'mdi-car-hatchback', action: () => { this.$router.push('/') } },
+        { title: 'Szukaj ofert', icon: 'mdi-car-search', action: () => { this.$router.push('/add-searched-offer') } },
+        { title: 'O aplikacji', icon: 'mdi-help-box', action: () => { this.$router.push('/about') } },
+        { title: 'Wyloguj', icon: 'mdi-logout', action: this.logOut }
       ]
+    }
+  },
+
+  methods: {
+    ...mapMutations([
+      'setAuthToken',
+      'setUserId'
+    ]),
+    logOut () {
+      this.setAuthToken(null)
+      this.setUserId(null)
+      this.$router.push('/register-and-login')
     }
   }
 }
