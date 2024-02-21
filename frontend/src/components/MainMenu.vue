@@ -4,6 +4,8 @@
       <v-list-item
         v-for="item in this.items"
         :key="item.title"
+        :class="{ activeMenuItem: $router.currentRoute.path === item.path }"
+        :to="item.path"
         link
         @click="item.action"
       >
@@ -27,10 +29,10 @@ export default {
   data () {
     return {
       items: [
-        { title: 'Znalezione oferty', icon: 'mdi-car-hatchback', action: () => { this.$router.push('/') } },
-        { title: 'Szukaj ofert', icon: 'mdi-car-search', action: () => { this.$router.push('/add-searched-offer') } },
-        { title: 'O aplikacji', icon: 'mdi-help-box', action: () => { this.$router.push('/about') } },
-        { title: 'Wyloguj', icon: 'mdi-logout', action: this.logOut }
+        { title: 'Znalezione oferty', path: '/', icon: 'mdi-car-hatchback', action: () => {} },
+        { title: 'Szukaj ofert', path: '/add-searched-offer', icon: 'mdi-car-search', action: () => {} },
+        { title: 'O aplikacji', path: '/about', icon: 'mdi-help-box', action: () => {} },
+        { title: 'Wyloguj', path: null, icon: 'mdi-logout', action: () => { this.logOut() } }
       ]
     }
   },
@@ -48,3 +50,12 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.activeMenuItem::before {
+  background-color: #00897b;
+  border-radius: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+}
+</style>
