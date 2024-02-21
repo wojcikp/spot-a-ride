@@ -8,7 +8,7 @@
             <v-toolbar dark color="teal darken-1">
               <v-toolbar-title
                 >{{
-                  isRegistered ? stateObj.register.name : stateObj.login.name
+                  isRegistered ? stateObj.login.name : stateObj.register.name
                 }}
                 form</v-toolbar-title
               >
@@ -16,16 +16,16 @@
             <v-card-text>
               <form
                 ref="form"
-                @submit.prevent="isRegistered ? register() : login()"
+                @submit.prevent="!isRegistered ? register() : login()"
               >
                 <v-text-field
                   v-model="userName"
-                  label="Imię i nazwisko"
+                  label="Login"
                   required
                 ></v-text-field>
 
                 <v-text-field
-                  v-if="isRegistered"
+                  v-if="!isRegistered"
                   v-model="email"
                   :rules="emailRules"
                   label="E-mail"
@@ -39,7 +39,7 @@
                 ></v-text-field>
 
                 <v-text-field
-                  v-if="isRegistered"
+                  v-if="!isRegistered"
                   v-model="confirmPassword"
                   label="Potwierdź hasło"
                   required
@@ -51,7 +51,7 @@
                   color="teal darken-1"
                   dark
                   >{{
-                    isRegistered ? stateObj.register.name : stateObj.login.name
+                    isRegistered ? stateObj.login.name : stateObj.register.name
                   }}</v-btn
                 >
                 <br>
@@ -82,16 +82,16 @@ export default {
 
   data () {
     return {
-      email: '',
+      email: null,
       emailRules: [
         v => !!v || 'E-mail is required',
         v => /.+@.+/.test(v) || 'E-mail must be valid'
       ],
-      userName: '',
-      password: '',
-      confirmPassword: '',
-      isRegistered: false,
-      errorMessage: '',
+      userName: null,
+      password: null,
+      confirmPassword: null,
+      isRegistered: true,
+      errorMessage: null,
       stateObj: {
         register: {
           name: 'Register',
@@ -130,11 +130,20 @@ export default {
         this.errorMessage = 'Złe dane logowania.'
       }
     },
-    register () {
+    async register () {
       if (this.password === this.confirmPassword) {
-        this.isRegistered = false
-        this.errorMessage = ''
-        this.$refs.form.reset()
+        this.errorMessage = null
+        const res = await this.createAccount({ username: this.userName, email: this.email, password: this.password })
+        if (res.status) {
+          if (res.status >= 400 && res.status < 500) {
+            this.errorMessage = res.data
+          } else {
+            this.isRegistered = true
+            this.email = null
+            this.userName = null
+            this.password = null
+          }
+        }
       } else {
         this.errorMessage = 'Złe dane logowania.'
       }
@@ -144,8 +153,8 @@ export default {
   computed: {
     toggleMessage () {
       return this.isRegistered
-        ? this.stateObj.register.message
-        : this.stateObj.login.message
+        ? this.stateObj.login.message
+        : this.stateObj.register.message
     }
   }
 }

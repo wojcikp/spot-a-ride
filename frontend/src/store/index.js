@@ -33,13 +33,15 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    createAccount ({ commit }, { username, password }) {
-      axios.post('/api/users/', {
+    createAccount ({ commit }, { username, email, password }) {
+      return axios.post('/api/users/', {
         username: username,
+        email: email,
         password: password
       })
         .catch(err => {
           console.error(err)
+          return err.response
         })
     },
 
