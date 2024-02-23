@@ -37,16 +37,14 @@ export default {
   },
 
   mounted () {
-    this.$nextTick(() => {
-      if (this.authToken && this.userId) {
-        setInterval(() => {
-          this.getSearchedOffers()
-          this.getSpottedOffers()
-        }, 1000 * 60)
-      } else {
-        this.$router.push('/register-and-login')
-      }
-    })
+    if (this.authToken && this.userId) {
+      setInterval(() => {
+        this.getSearchedOffers()
+        this.getSpottedOffers()
+      }, 1000 * 60)
+    } else {
+      this.$router.push('/register-and-login')
+    }
   },
 
   methods: {
