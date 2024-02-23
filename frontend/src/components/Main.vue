@@ -1,23 +1,19 @@
 <template>
-<v-app id="spot-a-ride">
-  <upper-bar />
-  <main-menu />
+  <v-app id="spot-a-ride">
+    <upper-bar />
+    <main-menu />
 
-  <searched-offer v-for="(offer, index) in this.searchedOffers" :key="index"
-    :id="offer.id"
-    :brand="offer.brand"
-    :model="offer.model"
-    :mileageLimit="offer.mileage_limit"
-    :priceLimit="offer.price_limit"
-    :productionYearFrom="offer.production_year_from"
-    :productionYearTo="offer.production_year_to"
-  />
+    <searched-offer v-for="(offer, index) in this.searchedOffers" :key="index"
+      :id="offer.id"
+      :brand="offer.brand"
+      :model="offer.model"
+      :mileageLimit="offer.mileage_limit"
+      :priceLimit="offer.price_limit"
+      :productionYearFrom="offer.production_year_from"
+      :productionYearTo="offer.production_year_to"
+    />
 
-    <v-btn @click="this.getToken">GET TOKEN</v-btn>
-    <v-btn @click="this.setUser">SET USER</v-btn>
-    <v-btn @click="this.getSpotted">getSpotted</v-btn>
-    <v-btn @click="this.getSearched">getSearched</v-btn>
-    <v-btn @click="this.test">CLICK</v-btn>
+    <snack-bar />
   </v-app>
 </template>
 
@@ -26,9 +22,10 @@ import { mapActions, mapGetters } from 'vuex'
 import MainMenu from './MainMenu.vue'
 import SearchedOffer from './SearchedOffer.vue'
 import UpperBar from './UpperBar.vue'
+import SnackBar from './SnackBar.vue'
 
 export default {
-  components: { MainMenu, SearchedOffer, UpperBar },
+  components: { MainMenu, SearchedOffer, UpperBar, SnackBar },
   name: 'MainPage',
 
   computed: {
@@ -39,46 +36,7 @@ export default {
     ])
   },
 
-  methods: {
-    ...mapActions([
-      'createAccount',
-      'getAuthToken',
-      'getUserId',
-      'getSearchedOffers',
-      'addSearchedOffer',
-      'getSpottedOffers'
-    ]),
-    getToken () {
-      this.getAuthToken({ username: 'test', password: 'test' })
-    },
-    setUser () {
-      this.getUserId()
-    },
-    getSearched () {
-      this.getSearchedOffers()
-    },
-    getSpotted () {
-      this.getSpottedOffers()
-    },
-    test () {
-      // this.createAccount({ username: 'test2', password: 'test2' })
-      // this.getAuthToken({ username: 'test', password: 'test' })
-      // this.getUserId()
-      // this.getSearchedOffers()
-
-      this.addSearchedOffer({
-        brand: 'Mazda',
-        model: '3',
-        productionYearFrom: '2014',
-        productionYearTo: '2018',
-        mileageLimit: '120000',
-        priceLimit: '70000'
-      })
-      // this.getSpottedOffers()
-    }
-  },
-
-  mounted: () => {
+  mounted () {
     this.$nextTick(() => {
       if (this.authToken && this.userId) {
         setInterval(() => {
@@ -89,6 +47,13 @@ export default {
         this.$router.push('/register-and-login')
       }
     })
+  },
+
+  methods: {
+    ...mapActions([
+      'getSearchedOffers',
+      'getSpottedOffers'
+    ])
   }
 }
 </script>
