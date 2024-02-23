@@ -3,7 +3,7 @@
     <upper-bar />
     <main-menu />
 
-    <v-form class="mt-10 pt-10">
+    <v-form :disabled="disableForm" class="mt-10 pt-10">
       <v-container>
         <v-card class="pa-6">
           <v-row>
@@ -65,7 +65,14 @@
           </v-row>
           <v-row>
             <v-col>
-              <v-btn @click="addOffer" :disabled="this.brand === null" color="teal darken-1" class="mr-3 white--text">Dodaj</v-btn>
+              <v-btn
+                v-on="this.editMode ? { click: this.editOffer } : {click: this.addOffer}"
+                :disabled="this.brand === null"
+                color="teal darken-1"
+                class="mr-3 white--text"
+              >
+                {{ this.editMode ? 'Edytuj' : 'Dodaj' }}
+              </v-btn>
               <v-btn class="ml-3" @click="clearForm">Wyczyść</v-btn>
             </v-col>
           </v-row>
@@ -76,16 +83,18 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex'
+import { mapActions, mapGetters } from 'vuex'
 import MainMenu from './MainMenu.vue'
 import UpperBar from './UpperBar.vue'
 
 export default {
-  components: { MainMenu, UpperBar },
   name: 'NewSearchForm',
+  components: { MainMenu, UpperBar },
 
   data () {
     return {
+      editMode: false,
+      disableForm: false,
       brand: null,
       model: null,
       productionYearFrom: null,
@@ -104,16 +113,41 @@ export default {
         'Piaggio', 'Plymouth', 'Polestar', 'Polonez', 'Pontiac', 'Porsche', 'RAM', 'Renault', 'Rolls-Royce', 'Rover', 'Saab', 'Seat',
         'Seres', 'Shuanghuan', 'Skoda', 'Skywell', 'Smart', 'SsangYong', 'Subaru', 'Suzuki', 'Syrena', 'Tarpan', 'Tata', 'Tesla',
         'Toyota', 'Trabant', 'Triumph', 'Uaz', 'Vauxhall', 'VELEX', 'Volkswagen', 'Volvo', 'Warszawa', 'Wartburg', 'Wołga', 'XPeng',
-        'Zaporożec', 'Zastava', 'ZEEKR', 'Żuk']
+        'Zaporożec', 'Zastava', 'ZEEKR', 'Żuk'
+      ]
+    }
+  },
+
+  computed: {
+    ...mapGetters([
+      'searchedOfferToEdit',
+      'searchedOffers'
+    ])
+  },
+
+  mounted () {
+    if (this.searchedOfferToEdit) {
+      this.editMode = true
+      const searchedOfferToEdit = this.searchedOffers.filter(offer => offer.id === this.searchedOfferToEdit)
+      this.brand = searchedOfferToEdit[0].brand
+      this.model = searchedOfferToEdit[0].model
+      this.productionYearFrom = searchedOfferToEdit[0].production_year_from
+      this.productionYearTo = searchedOfferToEdit[0].production_year_to
+      this.mileageLimit = searchedOfferToEdit[0].mileage_limit
+      this.priceLimit = searchedOfferToEdit[0].price_limit
     }
   },
 
   methods: {
     ...mapActions([
-      'addSearchedOffer'
+      'addSearchedOffer',
+      'editSearchedOffer',
+      'getSearchedOffers',
+      'getSpottedOffers'
     ]),
-    addOffer () {
-      this.addSearchedOffer({
+    async addOffer () {
+      this.disableForm = true
+      await this.addSearchedOffer({
         brand: this.brand,
         model: this.model,
         productionYearFrom: this.productionYearFrom,
@@ -121,6 +155,29 @@ export default {
         mileageLimit: this.mileageLimit,
         priceLimit: this.priceLimit
       })
+      await this.getSearchedOffers()
+      await this.getSpottedOffers()
+      this.$router.push('/')
+      this.disableForm = false
+      this.clearForm()
+    },
+    async editOffer () {
+      this.disableForm = true
+      await this.editSearchedOffer({
+        id: this.searchedOfferToEdit,
+        brand: this.brand,
+        model: this.model,
+        productionYearFrom: this.productionYearFrom,
+        productionYearTo: this.productionYearTo,
+        mileageLimit: this.mileageLimit,
+        priceLimit: this.priceLimit
+      })
+      this.editMode = false
+      await this.getSearchedOffers()
+      await this.getSpottedOffers()
+      this.$router.push('/')
+      this.disableForm = false
+      this.clearForm()
     },
     clearForm () {
       this.brand = null

@@ -10,13 +10,16 @@ export default new Vuex.Store({
     authToken: null,
     userId: null,
     searchedOffers: [],
-    spottedOffers: []
+    spottedOffers: [],
+    searchedOfferToEdit: null,
+    showSnackBar: false
   },
   getters: {
     authToken: state => { return state.authToken },
     userId: state => { return state.userId },
     searchedOffers: state => { return state.searchedOffers },
-    spottedOffers: state => { return state.spottedOffers }
+    spottedOffers: state => { return state.spottedOffers },
+    searchedOfferToEdit: state => { return state.searchedOfferToEdit }
   },
   mutations: {
     setAuthToken (state, payload) {
@@ -30,6 +33,12 @@ export default new Vuex.Store({
     },
     setSpottedOffers (state, payload) {
       state.spottedOffers = payload
+    },
+    setSearchedOfferToEdit (state, payload) {
+      state.searchedOfferToEdit = payload
+    },
+    setShowSnackBar (state, payload) {
+      state.showSnackBar = payload
     }
   },
   actions: {
@@ -40,6 +49,7 @@ export default new Vuex.Store({
         password: password
       })
         .catch(err => {
+          commit('setShowSnackBar', true)
           console.error(err)
           return err.response
         })
@@ -116,6 +126,50 @@ export default new Vuex.Store({
           commit('setSearchedOffers', data)
         })
         .catch(err => {
+          commit('setShowSnackBar', true)
+          console.error(err)
+        })
+    },
+
+    editSearchedOffer ({ commit, state },
+      {
+        id,
+        brand,
+        model,
+        productionYearFrom,
+        productionYearTo,
+        mileageLimit,
+        priceLimit
+      }) {
+      return axios.put(`/api/searched-offers/${id}/`, {
+        user: state.userId,
+        brand: brand,
+        model: model,
+        production_year_from: productionYearFrom,
+        production_year_to: productionYearTo,
+        mileage_limit: mileageLimit,
+        price_limit: priceLimit
+      }, {
+        headers: {
+          Authorization: `Token ${state.authToken}`
+        }
+      })
+        .then(response => { return response.data })
+        .catch(err => {
+          commit('setShowSnackBar', true)
+          console.error(err)
+        })
+    },
+
+    removeSearchedOffer ({ commit, state }, id) {
+      return axios.delete(`/api/searched-offers/${id}/`, {
+        headers: {
+          Authorization: `Token ${state.authToken}`
+        }
+      })
+        .then(response => { return response.data })
+        .catch(err => {
+          commit('setShowSnackBar', true)
           console.error(err)
         })
     },
@@ -144,12 +198,11 @@ export default new Vuex.Store({
         .then(response => response.data)
         .then(data => {
           console.log(data)
-          const offers = state.spottedOffers.filter(offer => {
-            return offer.id !== offerId
-          })
+          const offers = state.spottedOffers.filter(offer => offer.id !== offerId)
           commit('setSpottedOffers', offers)
         })
         .catch(err => {
+          commit('setShowSnackBar', true)
           console.error(err)
         })
     }

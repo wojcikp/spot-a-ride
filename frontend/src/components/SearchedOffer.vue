@@ -30,6 +30,8 @@
       :length="Math.ceil(this.getSpottedOffersLength / 10)"
       total-visible="10"
     />
+    <v-btn @click="this.editOffer" x-small class="ma-3">Edytuj</v-btn>
+    <v-btn @click="this.deleteOffer" x-small class="ma-3" color="grey lighten-1">Usuń</v-btn>
     <v-btn @click="this.toggleSpottedOffersVisibility" block>
       Znalezione oferty ({{ this.getSpottedOffersLength }})
       <v-icon>
@@ -40,7 +42,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 import SpottedOffer from './SpottedOffer.vue'
 export default {
   name: 'SearchedOffer',
@@ -70,17 +72,13 @@ export default {
 
     getSpottedOffersForSearchedParams () {
       const offersPerPage = 10
-      const filteredOffers = this.spottedOffers.filter(offer => {
-        return offer.searched_offer === this.id
-      })
+      const filteredOffers = this.spottedOffers.filter(offer => offer.searched_offer === this.id)
       return filteredOffers.length > 10
         ? filteredOffers.slice((this.spottedOffersPage - 1) * offersPerPage, this.spottedOffersPage * offersPerPage)
         : filteredOffers
     },
     getSpottedOffersLength () {
-      return this.spottedOffers.filter(offer => {
-        return offer.searched_offer === this.id
-      }).length
+      return this.spottedOffers.filter(offer => offer.searched_offer === this.id).length
     },
     getPagesAmount () {
       return this.getSpottedOffersLength / 10
@@ -91,8 +89,26 @@ export default {
   },
 
   methods: {
+    ...mapActions([
+      'removeSearchedOffer',
+      'getSearchedOffers',
+      'getSpottedOffers'
+    ]),
+    ...mapMutations([
+      'setSearchedOfferToEdit'
+    ]),
     toggleSpottedOffersVisibility () {
       this.showSpottedOffers = !this.showSpottedOffers
+    },
+    editOffer () {
+      this.setSearchedOfferToEdit(this.id)
+      this.$router.push('/add-searched-offer')
+    },
+    async deleteOffer () {
+      await this.removeSearchedOffer(this.id)
+      await this.getSearchedOffers()
+      await this.getSpottedOffers()
+      this.$router.push('/')
     }
   }
 }
