@@ -43,9 +43,12 @@ export default {
   mounted () {
     if (this.authToken && this.userId) {
       setInterval(() => {
-        this.getSearchedOffers()
-        this.getSpottedOffers()
-      }, 1000 * 60 * 10)
+        const date = new Date()
+        if (date.getMinutes() === 10) {
+          this.getSearchedOffers()
+          this.getSpottedOffers()
+        }
+      }, 1000 * 60)
     } else {
       this.$router.push('/register-and-login')
     }
