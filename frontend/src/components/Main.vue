@@ -3,6 +3,10 @@
     <upper-bar />
     <main-menu />
 
+    <div class="first-search-btn" v-if="!this.searchedOffers.length">
+      <v-btn @click="$router.push('/add-searched-offer')">Dodaj swój pierwszy samochód do śledzenia</v-btn>
+    </div>
+
     <searched-offer v-for="(offer, index) in this.searchedOffers" :key="index"
       :id="offer.id"
       :brand="offer.brand"
@@ -41,7 +45,7 @@ export default {
       setInterval(() => {
         this.getSearchedOffers()
         this.getSpottedOffers()
-      }, 1000 * 60)
+      }, 1000 * 60 * 10)
     } else {
       this.$router.push('/register-and-login')
     }
@@ -59,5 +63,10 @@ export default {
 <style>
 .toolbar-title{
   margin-left: 20%;
+}
+.first-search-btn{
+  margin-top: 100px;
+  margin-left: auto;
+  margin-right: auto;
 }
 </style>
