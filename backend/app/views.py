@@ -34,10 +34,3 @@ class UserId(APIView):
 
     def get(self, request):
         return(Response({'userId': request.user.id}))
-
-class HelloView(APIView):
-    permission_classes = (IsAuthenticated,)
-
-    def get(self, request):
-        content = {'message': 'Hi there!'}
-        return Response(content)
