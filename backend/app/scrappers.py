@@ -33,7 +33,9 @@ def scrapper_scheduled_job():
         ]
         new_offers_to_compare = [{key: value for key, value in offer.items() if key not in {'img'}} for offer in new_offers]
 
-        mark_offers_as_gone(spotted_offers, new_offers_to_compare, spotted_offers_to_compare)
+        offers_ids_to_double_check = scrap_offers_ids(url)
+
+        mark_offers_as_gone(spotted_offers, new_offers_to_compare, spotted_offers_to_compare, offers_ids_to_double_check)
 
         spot_new_offers(new_offers_to_compare, spotted_offers_to_compare, new_offers, searched_offer)
 
@@ -67,10 +69,10 @@ def scrap(base_url):
 
     for page in range(pages):
         url = f'{base_url}&page={page+1}'
-        html = requests.get(url)
-        soup = BeautifulSoup(html.text, 'html.parser')
+        page_html = requests.get(url)
+        page_soup = BeautifulSoup(page_html.text, 'html.parser')
 
-        cars = soup.find_all('article', class_='ooa-yca59n e1oqyyyi0')
+        cars = page_soup.find_all('article', class_='ooa-yca59n e1oqyyyi0')
         for car in cars:
 
             img = car.find('img')['src'] if car.find('img') else None
@@ -94,13 +96,35 @@ def scrap(base_url):
     return scrapped_offers
 
 
-def mark_offers_as_gone(spotted_offers, new_offers_to_compare, spotted_offers_to_compare):
+def scrap_offers_ids(base_url):
+    html = requests.get(base_url)
+    soup = BeautifulSoup(html.text, 'html.parser')
+    offers_ids = []
+
+    last_page = soup.find_all(class_='ooa-1xgr17q')
+    pages = int(last_page[-1].text) if len(last_page) else 1
+
+    for page in range(pages):
+        url = f'{base_url}&page={page+1}'
+        page_html = requests.get(url)
+        page_soup = BeautifulSoup(page_html.text, 'html.parser')
+
+        cars = page_soup.find_all('article', class_='ooa-yca59n e1oqyyyi0')
+        for car in cars:
+            offers_ids.append(car['data-id'])
+
+    return offers_ids
+
+
+def mark_offers_as_gone(spotted_offers, new_offers_to_compare, spotted_offers_to_compare, offers_ids_to_double_check):
     MISSING_HTML_PAGE_MARK_AS_GONE_LIMIT = 10
     offers_to_mark_as_gone = []
     offers_gone_in_a_row_counter = 0
 
     for i, spotted_offer in enumerate(spotted_offers_to_compare):
-        if spotted_offer not in new_offers_to_compare and spotted_offers[i].date_disappeared is None:
+        if spotted_offer not in new_offers_to_compare \
+            and spotted_offers[i].date_disappeared is None \
+            and spotted_offer['otomoto_id'] not in offers_ids_to_double_check:
             offers_to_mark_as_gone.append(spotted_offers[i])
 
     for i, offer in enumerate(offers_to_mark_as_gone):
