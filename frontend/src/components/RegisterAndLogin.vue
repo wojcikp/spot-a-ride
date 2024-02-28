@@ -1,6 +1,5 @@
 <template>
   <div>
-    <upper-bar />
     <v-container class="mt-10" fluid fill-height>
       <v-layout align-center justify-center>
         <v-flex xs12 sm8 md4>
@@ -74,10 +73,8 @@
 
 <script>
 import { mapActions, mapMutations } from 'vuex'
-import UpperBar from './UpperBar.vue'
 
 export default {
-  components: { UpperBar },
   name: 'RegisterAndLogin',
 
   data () {
@@ -115,7 +112,8 @@ export default {
     ]),
     ...mapMutations([
       'setAuthToken',
-      'setUserId'
+      'setUserId',
+      'setShowProgressBar'
     ]),
     async login () {
       const authToken = await this.getAuthToken({ username: this.userName, password: this.password })
@@ -123,9 +121,11 @@ export default {
       const userId = await this.getUserId(authToken)
       this.setUserId(userId)
       if (authToken && userId) {
+        this.setShowProgressBar(true)
         await this.getSearchedOffers()
         await this.getSpottedOffers()
         this.$router.push('/')
+        this.setShowProgressBar(false)
       } else {
         this.errorMessage = 'Złe dane logowania.'
       }

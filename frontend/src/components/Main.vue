@@ -1,8 +1,5 @@
 <template>
-  <v-app id="spot-a-ride">
-    <upper-bar />
-    <main-menu />
-
+  <div>
     <div class="first-search-btn" v-if="!this.searchedOffers.length">
       <v-btn @click="$router.push('/add-searched-offer')">Dodaj swój pierwszy samochód do śledzenia</v-btn>
     </div>
@@ -18,18 +15,16 @@
     />
 
     <snack-bar />
-  </v-app>
+  </div>
 </template>
 
 <script>
 import { mapActions, mapGetters } from 'vuex'
-import MainMenu from './MainMenu.vue'
 import SearchedOffer from './SearchedOffer.vue'
-import UpperBar from './UpperBar.vue'
 import SnackBar from './SnackBar.vue'
 
 export default {
-  components: { MainMenu, SearchedOffer, UpperBar, SnackBar },
+  components: { SearchedOffer, SnackBar },
   name: 'MainPage',
 
   computed: {
@@ -71,5 +66,9 @@ export default {
   margin-top: 100px;
   margin-left: auto;
   margin-right: auto;
+}
+.spin{
+  margin-top: auto;
+  position: absolute;
 }
 </style>

@@ -1,8 +1,5 @@
 <template>
   <div>
-    <upper-bar />
-    <main-menu v-if="this.userId && this.authToken" />
-
     <v-card
       class="mx-auto mt-12"
       max-width="400"
@@ -44,11 +41,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import MainMenu from './MainMenu.vue'
-import UpperBar from './UpperBar.vue'
 
 export default {
-  components: { MainMenu, UpperBar },
   name: 'AboutPage',
 
   computed: {

@@ -1,8 +1,5 @@
 <template>
   <div>
-    <upper-bar />
-    <main-menu />
-
     <v-form :disabled="disableForm" class="mt-10 pt-10">
       <v-container>
         <v-card class="pa-6">
@@ -67,13 +64,13 @@
             <v-col>
               <v-btn
                 v-on="this.editMode ? { click: this.editOffer } : {click: this.addOffer}"
-                :disabled="this.brand === null"
+                :disabled="this.brand === null || this.disableForm"
                 color="teal darken-1"
                 class="mr-3 white--text"
               >
                 {{ this.editMode ? 'Edytuj' : 'Dodaj' }}
               </v-btn>
-              <v-btn class="ml-3" @click="clearForm">Wyczyść</v-btn>
+              <v-btn :disabled="this.disableForm" class="ml-3" @click="clearForm">Wyczyść</v-btn>
             </v-col>
           </v-row>
         </v-card>
@@ -84,13 +81,10 @@
 
 <script>
 import { BRAND_NAMES } from '../consts'
-import { mapActions, mapGetters } from 'vuex'
-import MainMenu from './MainMenu.vue'
-import UpperBar from './UpperBar.vue'
+import { mapActions, mapGetters, mapMutations } from 'vuex'
 
 export default {
   name: 'NewSearchForm',
-  components: { MainMenu, UpperBar },
 
   data () {
     return {
@@ -127,6 +121,9 @@ export default {
   },
 
   methods: {
+    ...mapMutations([
+      'setShowProgressBar'
+    ]),
     ...mapActions([
       'addSearchedOffer',
       'editSearchedOffer',
@@ -136,6 +133,7 @@ export default {
     ]),
     async addOffer () {
       this.disableForm = true
+      this.setShowProgressBar(true)
       const searchedOffer = await this.addSearchedOffer({
         brand: this.brand,
         model: this.model,
@@ -155,11 +153,13 @@ export default {
       })
       await this.getSpottedOffers()
       this.$router.push('/')
+      this.setShowProgressBar(false)
       this.disableForm = false
       this.clearForm()
     },
     async editOffer () {
       this.disableForm = true
+      this.setShowProgressBar(true)
       await this.editSearchedOffer({
         id: this.searchedOfferToEdit,
         brand: this.brand,
@@ -173,6 +173,7 @@ export default {
       await this.getSearchedOffers()
       await this.getSpottedOffers()
       this.$router.push('/')
+      this.setShowProgressBar(false)
       this.disableForm = false
       this.clearForm()
     },

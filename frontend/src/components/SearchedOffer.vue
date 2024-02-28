@@ -97,7 +97,8 @@ export default {
       'getSpottedOffersForNewSearch'
     ]),
     ...mapMutations([
-      'setSearchedOfferToEdit'
+      'setSearchedOfferToEdit',
+      'setShowProgressBar'
     ]),
     toggleSpottedOffersVisibility () {
       this.showSpottedOffers = !this.showSpottedOffers
@@ -107,9 +108,11 @@ export default {
       this.$router.push('/add-searched-offer')
     },
     async deleteOffer () {
+      this.setShowProgressBar(true)
       await this.removeSearchedOffer(this.id)
       await this.getSearchedOffers()
       await this.getSpottedOffers()
+      this.setShowProgressBar(false)
       this.$router.push('/')
     },
     getPrettyBrandName (brandName) {

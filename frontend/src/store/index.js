@@ -12,14 +12,16 @@ export default new Vuex.Store({
     searchedOffers: [],
     spottedOffers: [],
     searchedOfferToEdit: null,
-    showSnackBar: false
+    showSnackBar: false,
+    showProgressBar: false
   },
   getters: {
     authToken: state => { return state.authToken },
     userId: state => { return state.userId },
     searchedOffers: state => { return state.searchedOffers },
     spottedOffers: state => { return state.spottedOffers },
-    searchedOfferToEdit: state => { return state.searchedOfferToEdit }
+    searchedOfferToEdit: state => { return state.searchedOfferToEdit },
+    showProgressBar: state => { return state.showProgressBar }
   },
   mutations: {
     setAuthToken (state, payload) {
@@ -39,6 +41,9 @@ export default new Vuex.Store({
     },
     setShowSnackBar (state, payload) {
       state.showSnackBar = payload
+    },
+    setShowProgressBar (state, payload) {
+      state.showProgressBar = payload
     }
   },
   actions: {
