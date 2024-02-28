@@ -39,7 +39,7 @@ def scrapper_scheduled_job():
 
         spot_new_offers(new_offers_to_compare, spotted_offers_to_compare, new_offers, searched_offer)
 
-    print('SCRAPPER CRON JOB START', timezone.now())
+    print('SCRAPPER CRON JOB END', timezone.now())
 
 
 def scrapper_job_for_new_offer(user, searched_offer_id, brand, model, production_year_from, production_year_to, mileage_limit, price_limit):
