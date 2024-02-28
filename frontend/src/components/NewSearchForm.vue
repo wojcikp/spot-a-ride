@@ -83,6 +83,7 @@
 </template>
 
 <script>
+import { BRAND_NAMES } from '../consts'
 import { mapActions, mapGetters } from 'vuex'
 import MainMenu from './MainMenu.vue'
 import UpperBar from './UpperBar.vue'
@@ -101,20 +102,7 @@ export default {
       productionYearTo: null,
       mileageLimit: null,
       priceLimit: null,
-      brands: [
-        'Abarth', 'Acura', 'Aiways', 'Aixam', 'Alfa Romeo', 'Alpine', 'Asia', 'Aston Martin', 'Audi', 'Austin', 'Autobianchi',
-        'Baic', 'Bentley', 'BMW', 'BMW-ALPINA', 'Brilliance', 'Bugatti', 'Buick', 'BYD', 'Cadillac', 'Casalini', 'Caterham',
-        'Cenntro', 'Changan', 'Chatenet', 'Chevrolet', 'Chrysler', 'Citroën', 'Cupra', 'Dacia', 'Daewoo', 'Daihatsu', 'DeLorean',
-        'DFSK', 'DKW', 'Dodge', 'DR MOTOR', 'DS Automobiles', 'FAW', 'Ferrari', 'Fiat', 'Ford', 'Gaz', 'Geely', 'Genesis',
-        'GMC', 'GWM', 'Honda', 'Hongqi', 'Hummer', 'Hyundai', 'iamelectric', 'Ineos', 'Infiniti', 'Inny', 'Isuzu',
-        'Iveco', 'Jaguar', 'Jeep', 'Jetour', 'Kia', 'KTM', 'Lada', 'Lamborghini', 'Lancia', 'Land Rover', 'LEVC', 'Lexus',
-        'Ligier', 'Lincoln', 'Lotus', 'LTI', 'Lucid', 'Lynk & Co', 'MAN', 'Maserati', 'Maxus', 'Maybach', 'Mazda', 'McLaren',
-        'Mercedes-Benz', 'Mercury', 'MG', 'Microcar', 'MINI', 'Mitsubishi', 'NIO', 'Nissan', 'Nysa', 'Oldsmobile', 'Opel', 'Peugeot',
-        'Piaggio', 'Plymouth', 'Polestar', 'Polonez', 'Pontiac', 'Porsche', 'RAM', 'Renault', 'Rolls-Royce', 'Rover', 'Saab', 'Seat',
-        'Seres', 'Shuanghuan', 'Skoda', 'Skywell', 'Smart', 'SsangYong', 'Subaru', 'Suzuki', 'Syrena', 'Tarpan', 'Tata', 'Tesla',
-        'Toyota', 'Trabant', 'Triumph', 'Uaz', 'Vauxhall', 'VELEX', 'Volkswagen', 'Volvo', 'Warszawa', 'Wartburg', 'Wołga', 'XPeng',
-        'Zaporożec', 'Zastava', 'ZEEKR', 'Żuk'
-      ]
+      brands: BRAND_NAMES
     }
   },
 
@@ -143,11 +131,12 @@ export default {
       'addSearchedOffer',
       'editSearchedOffer',
       'getSearchedOffers',
-      'getSpottedOffers'
+      'getSpottedOffers',
+      'getSpottedOffersForNewSearch'
     ]),
     async addOffer () {
       this.disableForm = true
-      await this.addSearchedOffer({
+      const searchedOffer = await this.addSearchedOffer({
         brand: this.brand,
         model: this.model,
         productionYearFrom: this.productionYearFrom,
@@ -155,7 +144,15 @@ export default {
         mileageLimit: this.mileageLimit,
         priceLimit: this.priceLimit
       })
-      await this.getSearchedOffers()
+      await this.getSpottedOffersForNewSearch({
+        searchedOfferId: searchedOffer.id,
+        brand: searchedOffer.brand,
+        model: searchedOffer.model,
+        productionYearFrom: searchedOffer.production_year_from,
+        productionYearTo: searchedOffer.production_year_to,
+        mileageLimit: searchedOffer.mileage_limit,
+        priceLimit: searchedOffer.price_limit
+      })
       await this.getSpottedOffers()
       this.$router.push('/')
       this.disableForm = false

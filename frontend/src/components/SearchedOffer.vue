@@ -1,6 +1,6 @@
 <template>
   <v-card class="offer">
-    <v-card-title class="otomoto-brand justify-center">{{ this.brand }}</v-card-title>
+    <v-card-title class="otomoto-brand justify-center">{{ this.getPrettyBrandName(this.brand) }}</v-card-title>
     <v-card-subtitle class="otomoto-model font-weight-bold">Model: {{ this.model }}</v-card-subtitle>
     <v-card-text>
       <v-row>
@@ -42,6 +42,7 @@
 </template>
 
 <script>
+import { BRAND_NAMES } from '../consts'
 import { mapActions, mapGetters, mapMutations } from 'vuex'
 import SpottedOffer from './SpottedOffer.vue'
 export default {
@@ -92,7 +93,8 @@ export default {
     ...mapActions([
       'removeSearchedOffer',
       'getSearchedOffers',
-      'getSpottedOffers'
+      'getSpottedOffers',
+      'getSpottedOffersForNewSearch'
     ]),
     ...mapMutations([
       'setSearchedOfferToEdit'
@@ -109,6 +111,11 @@ export default {
       await this.getSearchedOffers()
       await this.getSpottedOffers()
       this.$router.push('/')
+    },
+    getPrettyBrandName (brandName) {
+      const name = BRAND_NAMES.find(item => item.value === brandName)
+      if (name) return name.text
+      else return brandName
     }
   }
 }

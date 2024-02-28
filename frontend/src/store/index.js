@@ -99,6 +99,39 @@ export default new Vuex.Store({
         })
     },
 
+    getSpottedOffersForNewSearch ({ commit, state },
+      {
+        searchedOfferId,
+        brand,
+        model,
+        productionYearFrom,
+        productionYearTo,
+        mileageLimit,
+        priceLimit
+      }) {
+      return axios.get('/scrap-for-new-search/', {
+        params: {
+          searched_offer_id: searchedOfferId,
+          brand: brand,
+          model: model,
+          production_year_from: productionYearFrom,
+          production_year_to: productionYearTo,
+          mileage_limit: mileageLimit,
+          price_limit: priceLimit
+        },
+        headers: {
+          Authorization: `Token ${state.authToken}`
+        }
+      })
+        .then(response => response.data)
+        .then(data => {
+          commit('setSpottedOffers', [...state.spottedOffers, data])
+        })
+        .catch(err => {
+          console.error(err)
+        })
+    },
+
     addSearchedOffer ({ commit, state },
       {
         brand,
@@ -123,7 +156,8 @@ export default new Vuex.Store({
       })
         .then(response => response.data)
         .then(data => {
-          commit('setSearchedOffers', data)
+          commit('setSearchedOffers', [...state.searchedOffers, data])
+          return data
         })
         .catch(err => {
           commit('setShowSnackBar', true)

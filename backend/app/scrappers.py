@@ -6,7 +6,7 @@ from .models import SearchedOffer, SpottedOffer
 
 
 def scrapper_scheduled_job():
-    print('SCRAPPER JOB', timezone.now())
+    print('SCRAPPER CRON JOB START', timezone.now())
 
     searched_offers = SearchedOffer.objects.all()
 
@@ -38,6 +38,37 @@ def scrapper_scheduled_job():
         mark_offers_as_gone(spotted_offers, new_offers_to_compare, spotted_offers_to_compare, offers_ids_to_double_check)
 
         spot_new_offers(new_offers_to_compare, spotted_offers_to_compare, new_offers, searched_offer)
+
+    print('SCRAPPER CRON JOB START', timezone.now())
+
+
+def scrapper_job_for_new_offer(user, searched_offer_id, brand, model, production_year_from, production_year_to, mileage_limit, price_limit):
+    print('SCRAPPER JOB FOR NEW SEARCH START', timezone.now())
+
+    url = build_url(brand, model, production_year_from, production_year_to, mileage_limit, price_limit)
+    new_offers = scrap(url)
+    searched_offer = SearchedOffer.objects.get(id=searched_offer_id)
+    spotted_offers = []
+
+    for new_offer in new_offers:
+        spotted_offer = SpottedOffer.objects.create(
+            user=user,
+            searched_offer=searched_offer,
+            otomoto_url=new_offer.get('otomoto_url'),
+            otomoto_id=new_offer.get('otomoto_id'),
+            otomoto_title=new_offer.get('otomoto_title'),
+            brand=brand,
+            model=model,
+            img=new_offer.get('img'),
+            production_year=new_offer.get('production_year'),
+            mileage=new_offer.get('mileage'),
+            price=new_offer.get('price'),
+        )
+        spotted_offers.append(spotted_offer)
+
+    print('SCRAPPER JOB FOR NEW SEARCH END', timezone.now())
+
+    return spotted_offers
 
 
 def build_url(brand, model=None, production_year_from=None, production_year_to=None, mileage_limit=None, price_limit=None):
@@ -78,10 +109,13 @@ def scrap(base_url):
             img = car.find('img')['src'] if car.find('img') else None
             otomoto_url = car.find('a')['href'] if car.find('a') else None
             otomoto_id = car['data-id']
-            otomoto_title = car.find('h1').text
-            year = int(car.find(attrs={'data-parameter': 'year'}).text)
-            mileage = int(car.find(attrs={'data-parameter': 'mileage'}).text.replace('km', '').replace(' ', ''))
-            price = int(car.find('h3', class_='e1oqyyyi16 ooa-1n2paoq er34gjf0').text.replace(' ', ''))
+            otomoto_title = car.find('h1').text if car.find('h1') else None
+            year = int(car.find(attrs={'data-parameter': 'year'}).text) \
+                if car.find(attrs={'data-parameter': 'year'}) else None
+            mileage = int(car.find(attrs={'data-parameter': 'mileage'}).text.replace('km', '').replace(' ', '')) \
+                if car.find(attrs={'data-parameter': 'mileage'}) else None
+            price = int(car.find('h3', class_='e1oqyyyi16 ooa-1n2paoq er34gjf0').text.replace(' ', '')) \
+                if car.find('h3', class_='e1oqyyyi16 ooa-1n2paoq er34gjf0') else None
 
             scrapped_offers.append({
                 'otomoto_url': otomoto_url,

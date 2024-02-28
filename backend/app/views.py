@@ -34,3 +34,24 @@ class UserId(APIView):
 
     def get(self, request):
         return(Response({'userId': request.user.id}))
+    
+
+class ScrapOffersForNewSearch(APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        from .scrappers import scrapper_job_for_new_offer
+
+        new_offers = scrapper_job_for_new_offer(
+            request.user,
+            request.query_params.get('searched_offer_id'),
+            request.query_params.get('brand'),
+            request.query_params.get('model'),
+            request.query_params.get('production_year_from'),
+            request.query_params.get('production_year_to'),
+            request.query_params.get('mileage_limit'),
+            request.query_params.get('price_limit')
+        )
+        spotted_offers = SpottedOfferSerializer(new_offers, many=True)
+
+        return Response(spotted_offers.data)
