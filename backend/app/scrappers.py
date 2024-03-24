@@ -103,7 +103,7 @@ def scrap(base_url):
         page_html = requests.get(url)
         page_soup = BeautifulSoup(page_html.text, 'html.parser')
 
-        cars = page_soup.find_all('article', class_='ooa-yca59n e1oqyyyi0')
+        cars = page_soup.find_all('article', class_='ooa-yca59n ekwd5px0')
         for car in cars:
 
             img = car.find('img')['src'] if car.find('img') else None
@@ -114,8 +114,9 @@ def scrap(base_url):
                 if car.find(attrs={'data-parameter': 'year'}) else None
             mileage = int(car.find(attrs={'data-parameter': 'mileage'}).text.replace('km', '').replace(' ', '')) \
                 if car.find(attrs={'data-parameter': 'mileage'}) else None
-            price = int(car.find('h3', class_='e1oqyyyi16 ooa-1n2paoq er34gjf0').text.replace(' ', '')) \
-                if car.find('h3', class_='e1oqyyyi16 ooa-1n2paoq er34gjf0') else None
+            price = int(car.find('h3', class_='ekwd5px16 ooa-1n2paoq er34gjf0').text.replace(' ', '')) \
+                if car.find('h3', class_='ekwd5px16 ooa-1n2paoq er34gjf0') else None
+            # TODO django.db.utils.IntegrityError: null value in column "price" of relation "app_spottedoffer" violates not-null constraint
 
             scrapped_offers.append({
                 'otomoto_url': otomoto_url,
