@@ -55,6 +55,7 @@ export default new Vuex.Store({
       })
         .catch(err => {
           commit('setShowSnackBar', true)
+          commit('setShowProgressBar', false)
           console.error(err)
           return err.response
         })
@@ -133,6 +134,8 @@ export default new Vuex.Store({
           commit('setSpottedOffers', [...state.spottedOffers, data])
         })
         .catch(err => {
+          commit('setShowSnackBar', true)
+          commit('setShowProgressBar', false)
           console.error(err)
         })
     },
@@ -166,6 +169,7 @@ export default new Vuex.Store({
         })
         .catch(err => {
           commit('setShowSnackBar', true)
+          commit('setShowProgressBar', false)
           console.error(err)
         })
     },
@@ -196,6 +200,7 @@ export default new Vuex.Store({
         .then(response => { return response.data })
         .catch(err => {
           commit('setShowSnackBar', true)
+          commit('setShowProgressBar', false)
           console.error(err)
         })
     },
@@ -209,6 +214,7 @@ export default new Vuex.Store({
         .then(response => { return response.data })
         .catch(err => {
           commit('setShowSnackBar', true)
+          commit('setShowProgressBar', false)
           console.error(err)
         })
     },
@@ -242,6 +248,7 @@ export default new Vuex.Store({
         })
         .catch(err => {
           commit('setShowSnackBar', true)
+          commit('setShowProgressBar', false)
           console.error(err)
         })
     }
